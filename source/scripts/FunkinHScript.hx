@@ -230,7 +230,7 @@ class FunkinHScript extends Iris implements IFlxDestroyable
 		set('Function_Halt', Globals.Function_Halt);
 		set('Function_Stop', Globals.Function_Stop);
 		set('Function_Continue', Globals.Function_Continue);
-		set('Globals', funkin.scripts.Globals);
+		set('Globals', scripts.Globals);
 	}
 }
 

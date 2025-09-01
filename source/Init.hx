@@ -4,6 +4,7 @@ import flixel.FlxState;
 import openfl.Lib;
 import states.StoryMenuState;
 import states.CustomState;
+import backend.Controls;
 
 /**
 	This is the initialization class. if you ever want to set anything before the game starts or call anything then this is probably your best bet.

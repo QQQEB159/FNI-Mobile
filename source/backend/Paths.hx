@@ -15,6 +15,7 @@ import openfl.geom.Rectangle;
 
 import lime.utils.Assets;
 import flash.media.Sound;
+import openfl.utils.AssetType;
 
 import haxe.Json;
 
@@ -367,7 +368,7 @@ class Paths
 		if (FileSystem.exists(path)) return File.getContent(path);
 		else
 		#end
-		if (Assets.exists(path)) return Assets.getText(path);
+		if (OpenFlAssets.exists(path)) return OpenFlAssets.getText(path);
 		else
 		{
 			throw 'Couldnt find file at path [$path]';
@@ -382,7 +383,7 @@ class Paths
 		if (FileSystem.exists(path)) exists = true;
 		else
 		#end
-		if (Assets.exists(path, type)) exists = true;
+		if (OpenFlAssets.exists(path, type)) exists = true;
 		
 		return exists;
 	}

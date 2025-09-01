@@ -1761,18 +1761,6 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 					return;
 				}
 			}
-			#if android
-			else if(fullPath.startsWith(externalPath))
-			{
-				fullPath = fullPath.substr(externalPath.length);
-				if((fullPath.startsWith('assets/') #if MODS_ALLOWED || fullPath.startsWith('mods/') #end) && fullPath.contains('/images/'))
-				{
-					loadSprite(fullPath.substring(fullPath.indexOf('/images/') + '/images/'.length, fullPath.lastIndexOf('.')));
-					//trace('Inside Psych Engine Folder');
-					return;
-				}
-			}
-			#end
 
 			createPopup.visible = createPopup.active = false;
 			#if MODS_ALLOWED
