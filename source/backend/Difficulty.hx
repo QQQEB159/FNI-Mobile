@@ -3,11 +3,10 @@ package backend;
 class Difficulty
 {
 	public static final defaultList:Array<String> = [
-		'Easy',
-		'Normal',
-		'Hard'
+		'Casual',
+		'Canon'
 	];
-	private static final defaultDifficulty:String = 'Normal'; //The chart that has no postfix and starting difficulty on Freeplay/Story Mode
+	private static final defaultDifficulty:String = 'Canon'; //The chart that has no postfix and starting difficulty on Freeplay/Story Mode
 
 	public static var list:Array<String> = [];
 

@@ -2,6 +2,7 @@ package backend;
 
 import flixel.FlxState;
 import backend.PsychCamera;
+import scripts.*;
 
 class MusicBeatState extends FlxState
 {
@@ -19,6 +20,47 @@ class MusicBeatState extends FlxState
 		return Controls.instance;
 	}
 
+	// script related vars
+	public var scripted:Bool = false;
+	public var scriptName:String = 'Placeholder';
+	public var scriptGroup:HScriptGroup = new HScriptGroup();
+	
+	inline function isHardcodedState() return (scriptGroup != null && !scriptGroup.call('customMenu') == true) || (scriptGroup == null);
+	
+	public function setUpScript(?scriptName:String, callOnCreate:Bool = true):Bool
+	{
+		scriptGroup.parent = this;
+		
+		if (scriptName == null)
+		{
+			final stateName = Type.getClassName(Type.getClass(this)).split('.').pop();
+			scriptName = stateName ?? '???';
+		}
+		
+		this.scriptName = scriptName;
+		
+		var scriptFile = FunkinHScript.getPath('states/$scriptName');
+		
+		if (Paths.exists(scriptFile))
+		{
+			var newScript = FunkinHScript.fromFile(scriptFile, scriptName);
+			if (newScript.__garbage)
+			{
+				newScript = FlxDestroyUtil.destroy(newScript);
+				return false;
+			}
+			
+			//Logger.log('script [$scriptName] initialized');
+			
+			scriptGroup.addScript(newScript);
+			scripted = true;
+		}
+		
+		if (callOnCreate) scriptGroup.call('onCreate', []);
+		
+		return scripted;
+	}
+	
 	public var touchPad:TouchPad;
 	public var touchPadCam:FlxCamera;
 	public var mobileControls:IMobileControls;
@@ -100,6 +142,10 @@ class MusicBeatState extends FlxState
 
 	override function destroy()
 	{
+		scriptGroup.call('onDestroy');
+		
+		scriptGroup = FlxDestroyUtil.destroy(scriptGroup);
+		
 		removeTouchPad();
 		removeMobileControls();
 		
@@ -168,6 +214,9 @@ class MusicBeatState extends FlxState
 		});
 
 		super.update(elapsed);
+		
+		final hscriptArgs = [elapsed];
+		scriptGroup.call('onUpdate', hscriptArgs);
 	}
 
 	private function updateSection():Void
@@ -264,6 +313,8 @@ class MusicBeatState extends FlxState
 
 		if (curStep % 4 == 0)
 			beatHit();
+			
+		scriptGroup.call('onStepHit', []);
 	}
 
 	public var stages:Array<BaseStage> = [];
@@ -275,6 +326,8 @@ class MusicBeatState extends FlxState
 			stage.curDecBeat = curDecBeat;
 			stage.beatHit();
 		});
+		
+		scriptGroup.call('onBeatHit', []);
 	}
 
 	public function sectionHit():Void
@@ -284,6 +337,8 @@ class MusicBeatState extends FlxState
 			stage.curSection = curSection;
 			stage.sectionHit();
 		});
+		
+		scriptGroup.call('onSectionHit', []);
 	}
 
 	function stagesFunc(func:BaseStage->Void)
