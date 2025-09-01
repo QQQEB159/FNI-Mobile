@@ -12,7 +12,6 @@ import scripts.Globals;
  * 
  * idea from friens static fyr thanks
  */
-@:nullSafety(Strict)
 class HScriptGroup implements IFlxDestroyable
 {
 	/**
