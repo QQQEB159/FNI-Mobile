@@ -38,7 +38,6 @@ class Init extends FlxState
 		}
 
 		FlxG.mouse.visible = false;
-		controls.isInSubstate = false; //idfk what's wrong
 
 		super.create();
 		
