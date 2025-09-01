@@ -26,11 +26,10 @@ class Init extends FlxState
 		{
 			FlxG.fullscreen = FlxG.save.data.fullscreen;
 				//trace('LOADED FULLSCREEN SETTING!!');
-			}
-			persistentUpdate = true;
-			persistentDraw = true;
-			MobileData.init();
 		}
+		persistentUpdate = true;
+		persistentDraw = true;
+		MobileData.init();
 
 		if (FlxG.save.data.weekCompleted != null)
 		{
