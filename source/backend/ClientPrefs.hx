@@ -15,7 +15,7 @@ import flixel.input.gamepad.FlxGamepadInputID;
 	public var wideScreen:Bool = false;
 	public var hitboxType:String = "Gradient";
 	#if android
-	public var storageType:String = "EXTERNAL_DATA";
+	public var storageType:String = "EXTERNAL";
 	#end
 	public var popUpRating:Bool = true;
 	public var vsync:Bool = false;
