@@ -4,6 +4,8 @@ import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
 import flixel.input.gamepad.FlxGamepadInputID;
 
+import states.TitleState;
+
 // Add a variable here and it will get automatically saved
 @:structInit class SaveVariables {
 	// Mobile and Mobile Controls Releated
@@ -291,16 +293,16 @@ class ClientPrefs {
 
 	public static function reloadVolumeKeys()
 	{
-		Init.muteKeys = keyBinds.get('volume_mute').copy();
-		Init.volumeDownKeys = keyBinds.get('volume_down').copy();
-		Init.volumeUpKeys = keyBinds.get('volume_up').copy();
+		TitleState.muteKeys = keyBinds.get('volume_mute').copy();
+		TitleState.volumeDownKeys = keyBinds.get('volume_down').copy();
+		TitleState.volumeUpKeys = keyBinds.get('volume_up').copy();
 		toggleVolumeKeys(true);
 	}
 	public static function toggleVolumeKeys(?turnOn:Bool = true)
 	{
 		final emptyArray = [];
-		FlxG.sound.muteKeys = (!Controls.instance.mobileC && turnOn) ? Init.muteKeys : emptyArray;
-		FlxG.sound.volumeDownKeys = (!Controls.instance.mobileC && turnOn) ? Init.volumeDownKeys : emptyArray;
-		FlxG.sound.volumeUpKeys = (!Controls.instance.mobileC && turnOn) ? Init.volumeUpKeys : emptyArray;
+		FlxG.sound.muteKeys = (!Controls.instance.mobileC && turnOn) ? TitleState.muteKeys : emptyArray;
+		FlxG.sound.volumeDownKeys = (!Controls.instance.mobileC && turnOn) ? TitleState.volumeDownKeys : emptyArray;
+		FlxG.sound.volumeUpKeys = (!Controls.instance.mobileC && turnOn) ? TitleState.volumeUpKeys : emptyArray;
 	}
 }
