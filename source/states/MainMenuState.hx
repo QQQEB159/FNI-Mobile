@@ -139,7 +139,7 @@ var leaveState:String = '';
 		{
 			selectedSomethin = true;
 			FlxG.sound.play(Paths.sound('cancelMenu'));
-			MusicBeatState.switchState(new CustomState(Paths.hscript("states/TitleState")));
+			MusicBeatState.switchState(new TitleState());
 		}
 
         if (controls.justPressed("debug_1")) {
