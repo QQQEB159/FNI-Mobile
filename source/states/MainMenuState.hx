@@ -22,7 +22,7 @@ class MainMenuState extends MusicBeatState
 {
 	public static var psychEngineVersion:String = '1.0.4'; // This is also used for Discord RPC
 	public static var curSelected:Int = 0;
-    var menuItems:FlxTypedGroup<FlxSprite>;
+    var menuItems:FlxTypedGroup<Alphabet>;
 var optionShit:Array<String> = [
     'Story',
     'Freeplay',
@@ -81,7 +81,7 @@ var leaveState:String = '';
 	gradPart2 = FlxGradient.createGradientFlxSprite(120, FlxG.height, [0x0, 0xFF000000], 1, 180);
 	gradPart2.scrollFactor.set();
 
-	menuItems = new FlxTypedGroup<FlxSprite>();
+	menuItems = new FlxTypedGroup<Alphabet>();
     menuItems.scrollFactor.set(0, 0);
 
 	for (i in 0...optionShit.length)

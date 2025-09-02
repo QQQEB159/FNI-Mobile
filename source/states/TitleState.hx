@@ -26,8 +26,8 @@ class TitleState extends MusicBeatState
 	public static var initialized:Bool = false;
 
 	var blackScreen:FlxSprite;
-    var credGroup:FlxGroup;
-    var textGroup:FlxGroup;
+    var credGroup:FlxGroup = new FlxGroup();
+	var textGroup:FlxGroup = new FlxGroup();
     var ngSpr:FlxSprite;
     var curWacky:Array<String> = [];
     var wackyImage:FlxSprite;
@@ -107,9 +107,7 @@ class TitleState extends MusicBeatState
 	titleText.updateHitbox();
 	add(titleText);
 
-    credGroup = createGroup();
     add(credGroup);
-    textGroup = createGroup();
 
     blackScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 	credGroup.add(blackScreen);
