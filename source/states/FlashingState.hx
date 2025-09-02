@@ -41,10 +41,10 @@ class FlashingState extends MusicBeatState
         FlxG.sound.play(Paths.sound("confirmMenuBell"));
         FlxG.camera.flash(ClientPrefs.data.flashing ? 0xFFFFFFFF : 0xFF000000, 1, function() {
 			new FlxTimer().start(1, function (tmr:FlxTimer) {
-				MusicBeatState.switchState(new TitleState())
+				MusicBeatState.switchState(new TitleState());
 			});
 		});
-    }
+        }
 		super.update(elapsed);
 	}
 }
