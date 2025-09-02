@@ -235,7 +235,6 @@ function deleteCoolText()
 
 			case 9:
                 deleteCoolText();
-				curWacky = FlxG.random.int(0, getIntroTextShit().length);
 
 			case 10: createCoolText([curWacky[0]]);
 			case 12: addMoreText(curWacky[1]);
