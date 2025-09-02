@@ -82,7 +82,6 @@ var leaveState:String = '';
 	gradPart2.scrollFactor.set();
 
 	menuItems = new FlxTypedGroup<Alphabet>();
-    menuItems.scrollFactor.set(0, 0);
 
 	for (i in 0...optionShit.length)
 	{

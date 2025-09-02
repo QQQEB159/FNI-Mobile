@@ -230,15 +230,15 @@ function deleteCoolText()
 				deleteCoolText();
 				ngSpr.visible = false;
 
-			case 6: createCoolText([getIntroTextShit()[curWacky][0]]);
-			case 8: addMoreText(getIntroTextShit()[curWacky][1]);
+			case 6: createCoolText([curWacky[0]]);
+			case 8: addMoreText(curWacky[1]);
 
 			case 9:
                 deleteCoolText();
 				curWacky = FlxG.random.int(0, getIntroTextShit().length);
 
-			case 10: createCoolText([getIntroTextShit()[curWacky][0]]);
-			case 12: addMoreText(getIntroTextShit()[curWacky][1]);
+			case 10: createCoolText([curWacky[0]]);
+			case 12: addMoreText(curWacky[1]);
 			case 13: deleteCoolText();
 			case 14: addMoreText('Let\'s do');
 			case 15: addMoreText('a little');
@@ -259,16 +259,21 @@ function deleteCoolText()
 	}
 }
 
-function getIntroTextShit():Array<Array<String>>
-{
-	var firstArray:Array<String> = Mods.mergeAllTextsNamed('data/introText.txt');
-	var swagGoodArray:Array<Array<String>> = [];
-
-	for (i in firstArray)
+   function getIntroTextShit():Array<Array<String>>
 	{
-		swagGoodArray.push(i.split('--'));
-	}
+		#if MODS_ALLOWED
+		var firstArray:Array<String> = Mods.mergeAllTextsNamed('data/introText.txt');
+		#else
+		var fullText:String = Assets.getText(Paths.txt('introText'));
+		var firstArray:Array<String> = fullText.split('\n');
+		#end
+		var swagGoodArray:Array<Array<String>> = [];
 
-	return swagGoodArray;
-}
+		for (i in firstArray)
+		{
+			swagGoodArray.push(i.split('--'));
+		}
+
+		return swagGoodArray;
+	}
 }
