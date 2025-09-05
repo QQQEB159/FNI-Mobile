@@ -99,6 +99,42 @@ class LoadingState extends MusicBeatState
 		barGroup.add(bar);
 		barWidth = Std.int(barBack.width - 10);
 
+		#if PSYCH_WATERMARKS // PSYCH LOADING SCREEN
+		var bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg.antialiasing = ClientPrefs.data.antialiasing;
+		bg.setGraphicSize(Std.int(FlxG.width));
+		bg.color = 0xFFD16FFF;
+		bg.updateHitbox();
+		//addBehindBar(bg);
+	
+		loadingText = new FlxText(520, 600, 400, Language.getPhrase('now_loading', 'Now Loading', ['...']), 32);
+		loadingText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, LEFT, OUTLINE_FAST, FlxColor.BLACK);
+		loadingText.borderSize = 2;
+		//addBehindBar(loadingText);
+	
+		logo = new FlxSprite(0, 0).loadGraphic(Paths.image('loading_screen/icon'));
+		logo.antialiasing = ClientPrefs.data.antialiasing;
+		logo.scale.set(0.75, 0.75);
+		logo.updateHitbox();
+		logo.screenCenter();
+		logo.x -= 50;
+		logo.y -= 40;
+		//addBehindBar(logo);
+
+		#else // BASE GAME LOADING SCREEN
+		var bg = new FlxSprite().makeGraphic(1, 1, 0xFFCAFF4D);
+		bg.scale.set(FlxG.width, FlxG.height);
+		bg.updateHitbox();
+		bg.screenCenter();
+		//addBehindBar(bg);
+
+		funkay = new FlxSprite(0, 0).loadGraphic(Paths.image('funkay'));
+		funkay.antialiasing = ClientPrefs.data.antialiasing;
+		funkay.setGraphicSize(0, FlxG.height);
+		funkay.updateHitbox();
+		//addBehindBar(funkay);
+		#end
+		
 		#if HSCRIPT_ALLOWED
 		if(Mods.currentModDirectory != null && Mods.currentModDirectory.trim().length > 0)
 		{
@@ -135,42 +171,7 @@ class LoadingState extends MusicBeatState
 			}
 		}
 		#end
-
-		#if PSYCH_WATERMARKS // PSYCH LOADING SCREEN
-		var bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.antialiasing = ClientPrefs.data.antialiasing;
-		bg.setGraphicSize(Std.int(FlxG.width));
-		bg.color = 0xFFD16FFF;
-		bg.updateHitbox();
-		addBehindBar(bg);
-	
-		loadingText = new FlxText(520, 600, 400, Language.getPhrase('now_loading', 'Now Loading', ['...']), 32);
-		loadingText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, LEFT, OUTLINE_FAST, FlxColor.BLACK);
-		loadingText.borderSize = 2;
-		addBehindBar(loadingText);
-	
-		logo = new FlxSprite(0, 0).loadGraphic(Paths.image('loading_screen/icon'));
-		logo.antialiasing = ClientPrefs.data.antialiasing;
-		logo.scale.set(0.75, 0.75);
-		logo.updateHitbox();
-		logo.screenCenter();
-		logo.x -= 50;
-		logo.y -= 40;
-		addBehindBar(logo);
-
-		#else // BASE GAME LOADING SCREEN
-		var bg = new FlxSprite().makeGraphic(1, 1, 0xFFCAFF4D);
-		bg.scale.set(FlxG.width, FlxG.height);
-		bg.updateHitbox();
-		bg.screenCenter();
-		addBehindBar(bg);
-
-		funkay = new FlxSprite(0, 0).loadGraphic(Paths.image('funkay'));
-		funkay.antialiasing = ClientPrefs.data.antialiasing;
-		funkay.setGraphicSize(0, FlxG.height);
-		funkay.updateHitbox();
-		addBehindBar(funkay);
-		#end
+		
 		super.create();
 
 		if (stateChangeDelay <= 0 && checkLoaded())
