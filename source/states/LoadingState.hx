@@ -180,7 +180,7 @@ class LoadingState extends MusicBeatState
 		}
 	}
 
-	function addBehindBar(obj:flixel.FlxBasic)
+	public function addBehindBar(obj:flixel.FlxBasic)
 	{
 		insert(members.indexOf(barGroup), obj);
 	}
