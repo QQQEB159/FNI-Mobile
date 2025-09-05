@@ -1735,7 +1735,7 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 		
-		handleHealthDrain();
+	    if(!paused) handleHealthDrain();
 
 		setOnScripts('curDecStep', curDecStep);
 		setOnScripts('curDecBeat', curDecBeat);
