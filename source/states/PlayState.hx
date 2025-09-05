@@ -285,7 +285,7 @@ class PlayState extends MusicBeatState
 	public var allowNoteMovement:Bool = true;
 	public var disableOpponentStrums:Bool = false;
 	public var forceMiddlescroll:Bool = false;
-	public var noteMovementMult:Float = 5;
+	public var noteMovementMult:Float = 1;
 
 	override public function create()
 	{
@@ -2367,15 +2367,20 @@ class PlayState extends MusicBeatState
 		{
 			moveCameraToGirlfriend();
 			callOnScripts('onMoveCamera', ['gf']);
+			defaultCamZoom = defaultZooms[1];
 			return;
 		}
 
 		var isDad:Bool = (SONG.notes[sec].mustHitSection != true);
 		moveCamera(isDad);
-		if (isDad)
+		if (isDad) {
 			callOnScripts('onMoveCamera', ['dad']);
-		else
+			defaultCamZoom = defaultZooms[0];
+		}
+		else {
 			callOnScripts('onMoveCamera', ['boyfriend']);
+			defaultCamZoom = defaultZooms[2];
+		}
 	}
 	
 	public function moveCameraToGirlfriend()
@@ -2383,7 +2388,6 @@ class PlayState extends MusicBeatState
 		camFollow.setPosition(gf.getMidpoint().x, gf.getMidpoint().y);
 		camFollow.x += gf.cameraPosition[0] + girlfriendCameraOffset[0];
 		camFollow.y += gf.cameraPosition[1] + girlfriendCameraOffset[1];
-		defaultCamZoom = defaultZooms[1];
 		tweenCamIn();
 	}
 
@@ -2396,7 +2400,6 @@ class PlayState extends MusicBeatState
 			camFollow.setPosition(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
 			camFollow.x += dad.cameraPosition[0] + opponentCameraOffset[0];
 			camFollow.y += dad.cameraPosition[1] + opponentCameraOffset[1];
-			defaultCamZoom = defaultZooms[0];
 			tweenCamIn();
 		}
 		else
@@ -2405,7 +2408,6 @@ class PlayState extends MusicBeatState
 			camFollow.setPosition(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
 			camFollow.x -= boyfriend.cameraPosition[0] - boyfriendCameraOffset[0];
 			camFollow.y += boyfriend.cameraPosition[1] + boyfriendCameraOffset[1];
-			defaultCamZoom = defaultZooms[2];
 
 			if (songName == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1)
 			{
