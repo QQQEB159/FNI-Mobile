@@ -362,32 +362,6 @@ class Paths
 		return getPackerAtlas(key, parentFolder);
 	}
 	
-	public static function getContent(path:String):String
-	{
-		#if MODS_ALLOWED
-		if (FileSystem.exists(path)) return File.getContent(path);
-		else
-		#end
-		if (OpenFlAssets.exists(path)) return OpenFlAssets.getText(path);
-		else
-		{
-			throw 'Couldnt find file at path [$path]';
-		}
-	}
-	
-	public static function exists(path:String, ?type:AssetType):Bool
-	{
-		var exists:Bool = false;
-		
-		#if MODS_ALLOWED
-		if (FileSystem.exists(path)) exists = true;
-		else
-		#end
-		if (OpenFlAssets.exists(path, type)) exists = true;
-		
-		return exists;
-	}
-	
 	static public function getMultiAtlas(keys:Array<String>, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxAtlasFrames
 	{
 		
