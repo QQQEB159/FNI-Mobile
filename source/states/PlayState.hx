@@ -78,7 +78,7 @@ class PlayState extends MusicBeatState
 	public static var STRUM_X_MIDDLESCROLL = -278;
 
 	public static var ratingStuff:Array<Dynamic> = [
-		['YOU SUCK!', 0.2], //From 0% to 19%
+		['YOU SUCK', 0.2], //From 0% to 19%
 		['SHIT', 0.4], //From 20% to 39%
 		['BAD', 0.5], //From 40% to 49%
 		['BRUH', 0.6], //From 50% to 59%
@@ -86,8 +86,8 @@ class PlayState extends MusicBeatState
 		['NICE', 0.7], //69%
 		['GOOD', 0.8], //From 70% to 79%
 		['GREAT', 0.9], //From 80% to 89%
-		['SICK!', 1], //From 90% to 99%
-		['PERFECT!!', 1] //The value on this one isn't used actually, since Perfect is always "1"
+		['SICK', 1], //From 90% to 99%
+		['PERFECT', 1] //The value on this one isn't used actually, since Perfect is always "1"
 	];
 
 	//event variables
@@ -287,7 +287,7 @@ class PlayState extends MusicBeatState
 	public var allowNoteMovement:Bool = true;
 	public var disableOpponentStrums:Bool = false;
 	public var forceMiddlescroll:Bool = false;
-	public var noteMovementMult:Float = 1.75;
+	public var noteMovementMult:Float = 1.5;
 	public var handleHealthDrain:Void->Void = null;
 	public var camMult:Array<Float> = [0, 0];
 	public var camBopInterval:Float = 4;
@@ -2360,8 +2360,13 @@ class PlayState extends MusicBeatState
 				FlxG.sound.play(Paths.sound(value1), flValue2);
 				
 			case 'Cam Zoomin':
-	             if(flValue1 <= 0) flValue1 = 0;
-	             camBopInterval = flValue1 + 1;
+	            if(flValue1 == 0)
+	            {
+	             flValue1 = 1;
+	             camBopInterval = flValue1;
+	            }
+	            else
+	            camBopInterval = flValue1 + 1;
 	             var qqqebValues:Array<String> = value2.split(',');
                  camMult[0] = Std.parseFloat(qqqebValues[0].trim());
                  camMult[1] = Std.parseFloat(qqqebValues[1].trim());
