@@ -287,7 +287,7 @@ class PlayState extends MusicBeatState
 	public var allowNoteMovement:Bool = true;
 	public var disableOpponentStrums:Bool = false;
 	public var forceMiddlescroll:Bool = false;
-	public var noteMovementMult:Float = 1.25;
+	public var noteMovementMult:Float = 1.75;
 	public var handleHealthDrain:Void->Void = null;
 	public var camMult:Array<Float> = [0, 0];
 	public var camBopInterval:Float = 4;
@@ -2361,7 +2361,7 @@ class PlayState extends MusicBeatState
 				
 			case 'Cam Zoomin':
 	             if(flValue1 == null) flValue1 = 4;
-	             camBopInterval = flValue1;
+	             camBopInterval = flValue1 + 1;
 	             var qqqebValues:Array<String> = value2.split(',');
                  camMult[0] = Std.parseFloat(qqqebValues[0].trim());
                  camMult[1] = Std.parseFloat(qqqebValues[1].trim());
