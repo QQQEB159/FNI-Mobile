@@ -3087,7 +3087,7 @@ class PlayState extends MusicBeatState
 		if (songName != 'tutorial')
 			camZooming = true;
 
-		if (healthBar.percent > 10 && mechanics) health -= dad.singHealthDrain * note.isSustainNote ? 0.5 : 1;
+		if (healthBar.percent > 10 && mechanics) health -= dad.singHealthDrain * (note.isSustainNote ? 0.5 : 1);
 		
 		if(note.noteType == 'Hey!' && dad.hasAnimation('hey'))
 		{
