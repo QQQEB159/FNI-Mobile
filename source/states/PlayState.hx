@@ -2360,7 +2360,7 @@ class PlayState extends MusicBeatState
 				FlxG.sound.play(Paths.sound(value1), flValue2);
 				
 			case 'Cam Zoomin':
-	             if(flValue1 == null) flValue1 = 4;
+	             if(flValue1 <= 0) flValue1 = 0;
 	             camBopInterval = flValue1 + 1;
 	             var qqqebValues:Array<String> = value2.split(',');
                  camMult[0] = Std.parseFloat(qqqebValues[0].trim());
