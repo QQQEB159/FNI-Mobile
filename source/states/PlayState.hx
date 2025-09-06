@@ -169,6 +169,7 @@ class PlayState extends MusicBeatState
 	public var grpNoteSplashes:FlxTypedGroup<NoteSplash> = new FlxTypedGroup<NoteSplash>();
 
 	public var camZooming:Bool = false;
+	public var camBopping:Bool = true;
 	public var camZoomingMult:Float = 1;
 	public var camZoomingDecay:Float = 1;
 	private var curSong:String = "";
@@ -286,8 +287,10 @@ class PlayState extends MusicBeatState
 	public var allowNoteMovement:Bool = true;
 	public var disableOpponentStrums:Bool = false;
 	public var forceMiddlescroll:Bool = false;
-	public var noteMovementMult:Float = 2;
+	public var noteMovementMult:Float = 1.25;
 	public var handleHealthDrain:Void->Void = null;
+	public var camMult:Array<Float> = [0, 0];
+	public var camBopInterval:Float = 4;
 
 	override public function create()
 	{
@@ -2355,6 +2358,13 @@ class PlayState extends MusicBeatState
 			case 'Play Sound':
 				if(flValue2 == null) flValue2 = 1;
 				FlxG.sound.play(Paths.sound(value1), flValue2);
+				
+			case 'Cam Zoomin':
+	             if(flValue1 == null) flValue1 = 4;
+	             camBopInterval = flValue1;
+	             var qqqebValues:Array<String> = value2.split(',');
+                 camMult[0] = Std.parseFloat(qqqebValues[0].trim());
+                 camMult[1] = Std.parseFloat(qqqebValues[1].trim());
 		}
 
 		stagesFunc(function(stage:BaseStage) stage.eventCalled(eventName, value1, value2, flValue1, flValue2, strumTime));
@@ -3087,7 +3097,7 @@ class PlayState extends MusicBeatState
 		if (songName != 'tutorial')
 			camZooming = true;
 
-		if (healthBar.percent > 10 && mechanics) health -= dad.singHealthDrain * (note.isSustainNote ? 0.5 : 1);
+		if (healthBar.percent > 10 && mechanics) health -= dad.singHealthDrain * healthLoss * (60 / ClientPrefs.data.framerate);
 		
 		if(note.noteType == 'Hey!' && dad.hasAnimation('hey'))
 		{
@@ -3336,6 +3346,14 @@ class PlayState extends MusicBeatState
 
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
+		
+		if(curBeat % camBopInterval == 0) {
+		    if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.data.camZooms)
+			{
+				FlxG.camera.zoom += camMult[0];
+				camHUD.zoom += camMult[1];
+			}
+		}
 
 		characterBopper(curBeat);
 
@@ -3370,7 +3388,7 @@ class PlayState extends MusicBeatState
 			if (generatedMusic && !endingSong && !isCameraOnForcedPos)
 				moveCameraSection();
 
-			if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.data.camZooms)
+			if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.data.camZooms && camBopping)
 			{
 				FlxG.camera.zoom += 0.015 * camZoomingMult;
 				camHUD.zoom += 0.03 * camZoomingMult;
