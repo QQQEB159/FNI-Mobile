@@ -260,6 +260,7 @@ class PlayState extends MusicBeatState
 	private var luaDebugGroup:FlxTypedGroup<psychlua.DebugLuaText>;
 	#end
 	public var introSoundsSuffix:String = '';
+	public var missSoundSuffix:String = 'default';
 
 	// Less laggy controls
 	private var keysArray:Array<String>;
@@ -285,7 +286,8 @@ class PlayState extends MusicBeatState
 	public var allowNoteMovement:Bool = true;
 	public var disableOpponentStrums:Bool = false;
 	public var forceMiddlescroll:Bool = false;
-	public var noteMovementMult:Float = 1;
+	public var noteMovementMult:Float = 2;
+	public var handleHealthDrain:Void->Void = null;
 
 	override public function create()
 	{
@@ -576,7 +578,7 @@ class PlayState extends MusicBeatState
 		scoreTxt = new FlxText(0, healthBar.y + 40, FlxG.width, "", 20);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
-		scoreTxt.borderSize = 1.25;
+		scoreTxt.borderSize = 1.5;
 		scoreTxt.visible = !ClientPrefs.data.hideHud;
 		uiGroup.add(scoreTxt);
 
@@ -649,9 +651,11 @@ class PlayState extends MusicBeatState
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 
+	handleHealthDrain = healthdrain;
+		
 		//PRECACHING THINGS THAT GET USED FREQUENTLY TO AVOID LAGSPIKES
 		if(ClientPrefs.data.hitsoundVolume > 0) Paths.sound('hitsound');
-		if(!ClientPrefs.data.ghostTapping) for (i in 1...4) Paths.sound('missnote$i');
+		if(!ClientPrefs.data.ghostTapping) for (i in 1...4) Paths.sound('missnote-' + missSoundSuffix + '$i');
 		Paths.image('alphabet');
 
 		if (PauseSubState.songName != null)
@@ -1735,7 +1739,7 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 		
-	    if(!paused) handleHealthDrain();
+	    if(!paused && mechanics) handleHealthDrain();
 
 		setOnScripts('curDecStep', curDecStep);
 		setOnScripts('curDecBeat', curDecBeat);
@@ -1917,7 +1921,7 @@ class PlayState extends MusicBeatState
 		callOnScripts('onUpdatePost', [elapsed]);
 	}
 
-	public function handleHealthDrain():Void
+	public function healthdrain()
 	{
         if (!inCutscene && !startingSong && (health > passiveHealthDrain * healthLoss * (60 / ClientPrefs.data.framerate)) && passiveHealthDrain > 0) health -= passiveHealthDrain * healthLoss * (60 / ClientPrefs.data.framerate);
 	}
@@ -2357,6 +2361,8 @@ class PlayState extends MusicBeatState
 		callOnScripts('onEvent', [eventName, value1, value2, strumTime]);
 	}
 
+	var lastCameraTarget:String = null;
+	var cameraTarget:String = null;
 	public function moveCameraSection(?sec:Null<Int>):Void {
 		if(sec == null) sec = curSection;
 		if(sec < 0) sec = 0;
@@ -2367,7 +2373,10 @@ class PlayState extends MusicBeatState
 		{
 			moveCameraToGirlfriend();
 			callOnScripts('onMoveCamera', ['gf']);
+			if(lastCameraTarget != cameraTarget) {
+			lastCameraTarget = cameraTarget;
 			defaultCamZoom = defaultZooms[1];
+			}
 			return;
 		}
 
@@ -2375,11 +2384,17 @@ class PlayState extends MusicBeatState
 		moveCamera(isDad);
 		if (isDad) {
 			callOnScripts('onMoveCamera', ['dad']);
+			if(lastCameraTarget != cameraTarget) {
+			lastCameraTarget = cameraTarget;
 			defaultCamZoom = defaultZooms[0];
+			}
 		}
 		else {
 			callOnScripts('onMoveCamera', ['boyfriend']);
+			if(lastCameraTarget != cameraTarget) {
+			lastCameraTarget = cameraTarget;
 			defaultCamZoom = defaultZooms[2];
+			}
 		}
 	}
 	
@@ -2388,6 +2403,7 @@ class PlayState extends MusicBeatState
 		camFollow.setPosition(gf.getMidpoint().x, gf.getMidpoint().y);
 		camFollow.x += gf.cameraPosition[0] + girlfriendCameraOffset[0];
 		camFollow.y += gf.cameraPosition[1] + girlfriendCameraOffset[1];
+		cameraTarget = "gf";
 		tweenCamIn();
 	}
 
@@ -2400,6 +2416,7 @@ class PlayState extends MusicBeatState
 			camFollow.setPosition(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
 			camFollow.x += dad.cameraPosition[0] + opponentCameraOffset[0];
 			camFollow.y += dad.cameraPosition[1] + opponentCameraOffset[1];
+			cameraTarget = "dad";
 			tweenCamIn();
 		}
 		else
@@ -2408,6 +2425,7 @@ class PlayState extends MusicBeatState
 			camFollow.setPosition(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
 			camFollow.x -= boyfriend.cameraPosition[0] - boyfriendCameraOffset[0];
 			camFollow.y += boyfriend.cameraPosition[1] + boyfriendCameraOffset[1];
+			cameraTarget = "bf";
 
 			if (songName == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1)
 			{
@@ -2973,7 +2991,7 @@ class PlayState extends MusicBeatState
 		if(ClientPrefs.data.ghostTapping) return; //fuck it
 
 		noteMissCommon(direction);
-		FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
+		FlxG.sound.play(Paths.soundRandom('missnote-' + missSoundSuffix, 1, 3), FlxG.random.float(0.1, 0.2));
 		stagesFunc(function(stage:BaseStage) stage.noteMissPress(direction));
 		callOnScripts('noteMissPress', [direction]);
 	}
@@ -3069,7 +3087,7 @@ class PlayState extends MusicBeatState
 		if (songName != 'tutorial')
 			camZooming = true;
 
-		if (healthBar.percent > 10) health -= dad.singHealthDrain;
+		if (healthBar.percent > 10 && mechanics) health -= dad.singHealthDrain * note.isSustainNote ? 0.5 : 1;
 		
 		if(note.noteType == 'Hey!' && dad.hasAnimation('hey'))
 		{
