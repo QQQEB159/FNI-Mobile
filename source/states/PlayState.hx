@@ -2360,22 +2360,45 @@ class PlayState extends MusicBeatState
 				FlxG.sound.play(Paths.sound(value1), flValue2);
 				
 			case 'Cam Zoomin':
-	            if(flValue1 == 0)
-	            {
-	             flValue1 = 1;
-	             camBopInterval = flValue1;
-	            }
-	            else
-	            camBopInterval = flValue1 + 1;
+	             if(flValue1 == 0)
+	             camBopInterval = 1;
+	             else if(flValue1 == 1)
+	             camBopInterval = 2;
+	             else if(flValue1 == 2)
+	             camBopInterval = 1;
+	             else if(flValue1 == 3)
+	             camBopInterval = 4;
+	             else camBopInterval = 4;
 	             var qqqebValues:Array<String> = value2.split(',');
                  camMult[0] = Std.parseFloat(qqqebValues[0].trim());
                  camMult[1] = Std.parseFloat(qqqebValues[1].trim());
+            case 'Set Camera Zoom':
+	             FlxTween.cancelTweensOf(FlxG.camera, ['zoom']);
+			     var ease:String = 'linear';
+			     var qqqebValues:Array<String> = value2.split(',');
+			     if (qqqebValues.length > 1) ease = qqqebValues[1].trim();
+			     var ajwwk = getqqqebTweenEaseByString(ease);
+			     var orange:Float = Std.parseFloat(qqqebValues[0].trim());;
+				    
+			if(flValue2 == null) defaultCamZoom = flValue1;
+	        else
+		    FlxTween.tween(FlxG.camera, {zoom: flValue1}, orange, {ease: ajwwk, onComplete: function(twn:FlxTween) {defaultCamZoom = flValue1;}});
 		}
 
 		stagesFunc(function(stage:BaseStage) stage.eventCalled(eventName, value1, value2, flValue1, flValue2, strumTime));
 		callOnScripts('onEvent', [eventName, value1, value2, strumTime]);
 	}
 
+	public static function getqqqebTweenEaseByString(?ease:String = '') {
+		switch(ease.toLowerCase().trim()) {
+			case 'linear': return FlxEase.linear;
+			case 'cubeOut': return FlxEase.cubeOut;
+			case 'expoOut': return FlxEase.expoOut;
+			case 'quadOut': return FlxEase.quadOut;
+		}
+		return FlxEase.linear;
+	}
+	
 	var lastCameraTarget:String = null;
 	var cameraTarget:String = null;
 	public function moveCameraSection(?sec:Null<Int>):Void {
@@ -3090,6 +3113,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 		vocals.volume = 0;
+		FlxG.sound.play(Paths.soundRandom('missnote-' + missSoundSuffix, 1, 3), FlxG.random.float(0.1, 0.2));
 	}
 
 	function opponentNoteHit(note:Note):Void
@@ -3353,7 +3377,7 @@ class PlayState extends MusicBeatState
 		iconP2.updateHitbox();
 		
 		if(curBeat % camBopInterval == 0) {
-		    if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.data.camZooms)
+		    if (camZooming && ClientPrefs.data.camZooms)
 			{
 				FlxG.camera.zoom += camMult[0];
 				camHUD.zoom += camMult[1];
