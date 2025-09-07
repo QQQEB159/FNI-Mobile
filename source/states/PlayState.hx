@@ -2378,7 +2378,7 @@ class PlayState extends MusicBeatState
 			     var qqqebValues:Array<String> = value2.split(',');
 			     if (qqqebValues.length > 1) ease = qqqebValues[1].trim();
 			     var ajwwk = getqqqebTweenEaseByString(ease);
-			     var orange:Float = Std.parseFloat(qqqebValues[0].trim());;
+			     var orange:Float = Std.parseFloat(qqqebValues[0].trim());
 				    
 			if(flValue2 == null) defaultCamZoom = flValue1;
 	        else
