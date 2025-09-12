@@ -2396,6 +2396,7 @@ class PlayState extends MusicBeatState
 			case 'expoOut': return FlxEase.expoOut;
 			case 'quadOut': return FlxEase.quadOut;
 		}
+		return FlxEase.linear;
 	}
 	
 	var lastCameraTarget:String = null;
