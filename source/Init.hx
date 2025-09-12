@@ -3,6 +3,7 @@ package;
 import flixel.input.keyboard.FlxKey;
 import states.StoryMenuState;
 import states.CustomState;
+import states.FlashingState;
 
 class Init extends MusicBeatState
 {
