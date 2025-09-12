@@ -337,6 +337,7 @@ class HScript extends Iris
 		#end
 		set('this', this);
 		set('game', FlxG.state);
+		set('CustomState', CustomState);
 		set('controls', Controls.instance);
 
 		set('buildTarget', LuaUtils.getBuildTarget());

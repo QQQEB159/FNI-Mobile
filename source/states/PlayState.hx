@@ -581,7 +581,7 @@ class PlayState extends MusicBeatState
 		scoreTxt = new FlxText(0, healthBar.y + 40, FlxG.width, "", 20);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
-		scoreTxt.borderSize = 1.5;
+		scoreTxt.borderSize = 2;
 		scoreTxt.visible = !ClientPrefs.data.hideHud;
 		uiGroup.add(scoreTxt);
 
@@ -2382,21 +2382,20 @@ class PlayState extends MusicBeatState
 				    
 			if(flValue2 == null) defaultCamZoom = flValue1;
 	        else
-		    FlxTween.tween(FlxG.camera, {zoom: flValue1}, orange, {ease: ajwwk, onComplete: function(twn:FlxTween) {defaultCamZoom = flValue1;}});
+		    FlxTween.tween(FlxG.camera, {zoom: flValue1}, orange / playbackRate, {ease: ajwwk, onComplete: function(twn:FlxTween) {defaultCamZoom = flValue1;}});
 		}
 
 		stagesFunc(function(stage:BaseStage) stage.eventCalled(eventName, value1, value2, flValue1, flValue2, strumTime));
 		callOnScripts('onEvent', [eventName, value1, value2, strumTime]);
 	}
 
-	public static function getqqqebTweenEaseByString(?ease:String = '') {
+	function getqqqebTweenEaseByString(ease:String = '') {
 		switch(ease.toLowerCase().trim()) {
 			case 'linear': return FlxEase.linear;
 			case 'cubeOut': return FlxEase.cubeOut;
 			case 'expoOut': return FlxEase.expoOut;
 			case 'quadOut': return FlxEase.quadOut;
 		}
-		return FlxEase.linear;
 	}
 	
 	var lastCameraTarget:String = null;
@@ -3112,8 +3111,8 @@ class PlayState extends MusicBeatState
 				gf.specialAnim = true;
 			}
 		}
-		vocals.volume = 0;
 		FlxG.sound.play(Paths.soundRandom('missnote-' + missSoundSuffix, 1, 3), FlxG.random.float(0.1, 0.2));
+		vocals.volume = 0;
 	}
 
 	function opponentNoteHit(note:Note):Void
