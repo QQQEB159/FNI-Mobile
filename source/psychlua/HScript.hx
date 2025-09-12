@@ -14,7 +14,6 @@ import crowplexus.iris.Iris;
 import crowplexus.iris.IrisConfig;
 import crowplexus.hscript.Expr.Error as IrisError;
 import crowplexus.hscript.Printer;
-import extensions.hscript.InterpEx;
 
 import haxe.ValueException;
 
@@ -113,7 +112,8 @@ class HScript extends Iris
 			scriptName = parent.scriptName;
 		#end
 		super(scriptThing, new IrisConfig(scriptName, false, false));
-		var customInterp:InterpEx = new InterpEx(FlxG.state);
+		var customInterp:CustomInterp = new CustomInterp();
+		customInterp.parentInstance = FlxG.state;
 		customInterp.showPosOnLog = false;
 		this.interp = customInterp;
 		#if LUA_ALLOWED
@@ -332,6 +332,46 @@ class HScript extends Iris
 		});
 		#if LUA_ALLOWED
 		set('parentLua', parentLua);
+		/*set("addTouchPad", (DPadMode:String, ActionMode:String) -> {
+			PlayState.instance.makeLuaTouchPad(DPadMode, ActionMode);
+			PlayState.instance.addLuaTouchPad();
+		  });
+  
+		set("removeTouchPad", () -> {
+			PlayState.instance.removeLuaTouchPad();
+		});
+  
+		set("addTouchPadCamera", () -> {
+			if(PlayState.instance.luaTouchPad == null){
+				FunkinLua.luaTrace('addTouchPadCamera: TPAD does not exist.');
+				return;
+			}
+			PlayState.instance.addLuaTouchPadCamera();
+		});
+  
+		set("touchPadJustPressed", function(button:Dynamic):Bool {
+			if(PlayState.instance.luaTouchPad == null){
+			  //FunkinLua.luaTrace('touchPadJustPressed: TPAD does not exist.');
+			  return false;
+			}
+		  return PlayState.instance.luaTouchPadJustPressed(button);
+		});
+  
+		set("touchPadPressed", function(button:Dynamic):Bool {
+			if(PlayState.instance.luaTouchPad == null){
+				//FunkinLua.luaTrace('touchPadPressed: TPAD does not exist.');
+				return false;
+			}
+			return PlayState.instance.luaTouchPadPressed(button);
+		});
+  
+		set("touchPadJustReleased", function(button:Dynamic):Bool {
+			if(PlayState.instance.luaTouchPad == null){
+				//FunkinLua.luaTrace('touchPadJustReleased: TPAD does not exist.');
+				return false;
+			}
+			return PlayState.instance.luaTouchPadJustReleased(button);
+		});*/
 		#else
 		set('parentLua', null);
 		#end
@@ -527,6 +567,71 @@ class CustomFlxColor {
 
 	public static function fromString(str:String):Int
 		return cast FlxColor.fromString(str);
+}
+
+class CustomInterp extends crowplexus.hscript.Interp
+{
+	public var parentInstance(default, set):Dynamic = [];
+	private var _instanceFields:Array<String>;
+	function set_parentInstance(inst:Dynamic):Dynamic
+	{
+		parentInstance = inst;
+		if(parentInstance == null)
+		{
+			_instanceFields = [];
+			return inst;
+		}
+		_instanceFields = Type.getInstanceFields(Type.getClass(inst));
+		return inst;
+	}
+
+	public function new()
+	{
+		super();
+	}
+
+	override function fcall(o:Dynamic, funcToRun:String, args:Array<Dynamic>):Dynamic {
+		for (_using in usings) {
+			var v = _using.call(o, funcToRun, args);
+			if (v != null)
+				return v;
+		}
+
+		var f = get(o, funcToRun);
+
+		if (f == null) {
+			Iris.error('Tried to call null function $funcToRun', posInfos());
+			return null;
+		}
+
+		return Reflect.callMethod(o, f, args);
+	}
+
+	override function resolve(id: String): Dynamic {
+		if (locals.exists(id)) {
+			var l = locals.get(id);
+			return l.r;
+		}
+
+		if (variables.exists(id)) {
+			var v = variables.get(id);
+			return v;
+		}
+
+		if (imports.exists(id)) {
+			var v = imports.get(id);
+			return v;
+		}
+
+		if(parentInstance != null && _instanceFields.contains(id)) {
+			var v = Reflect.getProperty(parentInstance, id);
+			return v;
+		}
+
+		error(EUnknownVariable(id));
+
+		return null;
+	}
 }
 #else
 class HScript
