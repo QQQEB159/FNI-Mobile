@@ -14,6 +14,7 @@ import crowplexus.iris.Iris;
 import crowplexus.iris.IrisConfig;
 import crowplexus.hscript.Expr.Error as IrisError;
 import crowplexus.hscript.Printer;
+import extensions.hscript.InterpEx;
 
 import haxe.ValueException;
 
@@ -112,8 +113,9 @@ class HScript extends Iris
 			scriptName = parent.scriptName;
 		#end
 		super(scriptThing, new IrisConfig(scriptName, false, false));
-		var customInterp:CustomInterp = new CustomInterp();
-		customInterp.parentInstance = FlxG.state;
+		var customInterp:InterpEx = new InterpEx(FlxG.state);
+		//var customInterp:CustomInterp = new CustomInterp();
+		//customInterp.parentInstance = FlxG.state;
 		customInterp.showPosOnLog = false;
 		this.interp = customInterp;
 		#if LUA_ALLOWED
