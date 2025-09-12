@@ -338,6 +338,8 @@ class HScript extends Iris
 		set('this', this);
 		set('game', FlxG.state);
 		set('CustomState', states.CustomState);
+		set('MusicBeatState', MusicBeatState);
+		set('FlxTextBorderStyle', flixel.text.FlxText.FlxTextBorderStyle);
 		set('controls', Controls.instance);
 
 		set('buildTarget', LuaUtils.getBuildTarget());

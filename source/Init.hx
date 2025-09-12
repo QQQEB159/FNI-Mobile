@@ -34,12 +34,13 @@ class Init extends MusicBeatState
 		FlxG.mouse.visible = false;
 		
 		controls.isInSubstate = false;
-		/*if(FlxG.save.data.flashing == null && !FlashingState.leftState)
+		if(FlxG.save.data.disclaimerRead == null && !FlashingState.leftState)
 		{
 			FlxTransitionableState.skipNextTransIn = true;
 			FlxTransitionableState.skipNextTransOut = true;
-			MusicBeatState.switchState(new FlashingState());
-		}*/
-		MusicBeatState.switchState(new CustomState(Paths.hscript("states/TestState")));
+		    MusicBeatState.switchState(new CustomState(Paths.hscript("states/FlashingState")));
+		}
+		else
+		MusicBeatState.switchState(new CustomState(Paths.hscript("states/TitleState")));
     }
 }
