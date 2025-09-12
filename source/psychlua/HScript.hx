@@ -632,6 +632,101 @@ class CustomInterp extends crowplexus.hscript.Interp
 
 		return null;
 	}
+	
+	override function evalAssignOp(op, fop, e1, e2):Dynamic
+	{
+		var v;
+		switch (Tools.expr(e1))
+		{
+			case EIdent(id):
+				var l = locals.get(id);
+				v = fop(expr(e1), expr(e2));
+				if (l == null)
+				{
+					if (parentFields.contains(id))
+					{
+						Reflect.setProperty(parent, id, v);
+					}
+					else
+					{
+						setVar(id, v);
+					}
+				}
+				else
+				{
+					if (l.const != true) l.r = v;
+					else warn(ECustom("Cannot reassign final, for constant expression -> " + id));
+				}
+			case EField(e, f, s):
+				var obj = expr(e);
+				if (obj == null) if (!s) error(EInvalidAccess(f));
+				else return null;
+				v = fop(get(obj, f), expr(e2));
+				v = set(obj, f, v);
+			case EArray(e, index):
+				var arr:Dynamic = expr(e);
+				var index:Dynamic = expr(index);
+				if (isMap(arr))
+				{
+					v = fop(getMapValue(arr, index), expr(e2));
+					setMapValue(arr, index, v);
+				}
+				else
+				{
+					v = fop(arr[index], expr(e2));
+					arr[index] = v;
+				}
+			default:
+				return error(EInvalidOp(op));
+		}
+		return v;
+	}
+	
+	override function assign(e1:Expr, e2:Expr):Dynamic
+	{
+		var v = expr(e2);
+		switch (Tools.expr(e1))
+		{
+			case EIdent(id):
+				var l = locals.get(id);
+				if (l == null)
+				{
+					if (!variables.exists(id) && parentFields.contains(id))
+					{
+						Reflect.setProperty(parent, id, v);
+					}
+					else
+					{
+						setVar(id, v);
+					}
+				}
+				else
+				{
+					if (l.const != true) l.r = v;
+					else warn(ECustom("Cannot reassign final, for constant expression -> " + id));
+				}
+			case EField(e, f, s):
+				var e = expr(e);
+				if (e == null) if (!s) error(EInvalidAccess(f));
+				else return null;
+				v = set(e, f, v);
+			case EArray(e, index):
+				var arr:Dynamic = expr(e);
+				var index:Dynamic = expr(index);
+				if (isMap(arr))
+				{
+					setMapValue(arr, index, v);
+				}
+				else
+				{
+					arr[index] = v;
+				}
+				
+			default:
+				error(EInvalidOp("="));
+		}
+		return v;
+	}
 }
 #else
 class HScript
