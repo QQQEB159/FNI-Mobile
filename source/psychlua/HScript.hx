@@ -14,6 +14,7 @@ import crowplexus.iris.Iris;
 import crowplexus.iris.IrisConfig;
 import crowplexus.hscript.Expr.Error as IrisError;
 import crowplexus.hscript.Printer;
+import crowplexus.hscript.*;
 
 import haxe.ValueException;
 
@@ -643,9 +644,9 @@ class CustomInterp extends crowplexus.hscript.Interp
 				v = fop(expr(e1), expr(e2));
 				if (l == null)
 				{
-					if (parentFields.contains(id))
+					if (_instanceFields.contains(id))
 					{
-						Reflect.setProperty(parent, id, v);
+						Reflect.setProperty(parentInstance, id, v);
 					}
 					else
 					{
@@ -691,9 +692,9 @@ class CustomInterp extends crowplexus.hscript.Interp
 				var l = locals.get(id);
 				if (l == null)
 				{
-					if (!variables.exists(id) && parentFields.contains(id))
+					if (!variables.exists(id) && _instanceFields.contains(id))
 					{
-						Reflect.setProperty(parent, id, v);
+						Reflect.setProperty(parentInstance, id, v);
 					}
 					else
 					{
