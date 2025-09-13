@@ -63,6 +63,7 @@ import backend.ui.*; //Psych-UI
 
 import objects.Alphabet;
 import objects.BGSprite;
+import objects.CharacterPortrait;
 
 import states.PlayState;
 import states.LoadingState;
