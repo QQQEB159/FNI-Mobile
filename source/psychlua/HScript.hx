@@ -591,6 +591,20 @@ class CustomInterp extends crowplexus.hscript.Interp
 		super();
 	}
 
+	override function makeIterator(v:Dynamic):Iterator<Dynamic>
+	{
+		#if ((flash && !flash9) || (php && !php7 && haxe_ver < '4.0.0'))
+		if (v.iterator != null) v = v.iterator();
+		#else
+		// DATA CHANGE //does a null check because this crashes on debug build
+		if (v.iterator != null) try
+			v = v.iterator()
+		catch (e:Dynamic) {};
+		#end
+		if (v.hasNext == null || v.next == null) error(EInvalidIterator(v));
+		return v;
+	}
+	
 	override function fcall(o:Dynamic, funcToRun:String, args:Array<Dynamic>):Dynamic {
 		for (_using in usings) {
 			var v = _using.call(o, funcToRun, args);
