@@ -7,7 +7,7 @@ typedef PortraitData =
 	var offsets:Array<Float>;
 	var bgSprite:String;
 	var scale:Array<Float>;
-	var ?flipTween:Bool = false;
+	var ?flipTween:Bool;
 }
 
 class CharacterPortrait extends FlxSprite
