@@ -2,7 +2,7 @@ package objects;
 
 import haxe.Json;
 
-public typedef PortraitData =
+typedef PortraitData =
 {
 	var ?offsets:Array<Float>;
 	var ?bgSprite:String;
