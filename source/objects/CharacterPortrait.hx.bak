@@ -29,8 +29,8 @@ class CharacterPortrait extends FlxSprite
 			
 			pJson.flipTween = false;
 			pJson = Json.parse(Paths.getTextFromFile('images/menus/story-freeplay/portraits/$portrait.json'));
-			var _scale = pJson.scale ?? [1, 1];
-			var _offsets = pJson.offsets ?? [0, 0];
+			var _scale = json.scale ?? [1, 1];
+			var _offsets = json.offsets ?? [0, 0];
 				
 			offset.x += _offsets[0];
 			offset.y += _offsets[1];
