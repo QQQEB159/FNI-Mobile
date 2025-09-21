@@ -4,10 +4,10 @@ import haxe.Json;
 
 typedef PortraitData =
 {
-	var ?offsets:Array<Float>;
-	var ?bgSprite:String;
-	var ?scale:Array<Float>;
-	var ?flipTween:Bool;
+	var offsets:Array<Float>;
+	var bgSprite:String;
+	var scale:Array<Float>;
+	var ?flipTween:Bool = false;
 }
 
 class CharacterPortrait extends FlxSprite
@@ -17,24 +17,28 @@ class CharacterPortrait extends FlxSprite
 	public function new(portrait:String)
 	{
 		super();
-		antialiasing = ClientPrefs.data.antialiasing;
 		loadPortrait(portrait);
 	}
 	
 	public function loadPortrait(portrait:String)
 	{
+		try {
 			loadGraphic(Paths.image('menus/story-freeplay/portraits/' + portrait));
-			updateHitbox();
-			centerOffsets();
+			antialiasing = ClientPrefs.data.antialiasing;
 			
-			pJson.flipTween = false;
-			pJson = Json.parse(Paths.getTextFromFile('images/menus/story-freeplay/portraits/$portrait.json', true));
-			var _scale = pJson.scale ?? [1, 1];
-			var _offsets = pJson.offsets ?? [0, 0];
+			var jsonPath:String = Paths.json('menus/story-freeplay/portraits/' + portrait);
+            if(Paths.fileExists(jsonPath, TEXT)) {
+                var rawJson:String = Paths.getTextFromFile(jsonPath);
+                pJson = Json.parse(rawJson);
+            }
+			var _scale = pJson.scale;
+			var _offsets = pJson.offsets;
 				
 			offset.x += _offsets[0];
 			offset.y += _offsets[1];
 			scale.set(_scale[0], _scale[1]);
+			updateHitbox();
+	   }
 	}
 	
 	public function changePortrait(portrait:String)
